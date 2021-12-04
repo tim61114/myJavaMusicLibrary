@@ -7,10 +7,10 @@ public class Client {
     public static final String dataPath = "data/";
 
     int currentNumberOfUsers;
-    Database userDB = new Database(dataPath+"user.db");
+    UserDB userDB = new UserDB(dataPath+"user.db");
 
     public Client(){
-        currentNumberOfUsers = userDB.countRows("users") - 1;
+        currentNumberOfUsers = userDB.getNumUsers();
     }
 
     public boolean checkUsernameExists(String username){
@@ -21,10 +21,12 @@ public class Client {
     }
 
     public void createUser(String username, String password){
-        userDB.insert("insert into users values(" + (currentNumberOfUsers + 1) + ",'"+username+"','"+password+"','"+username+".db',false)");
-        File userMusicDB = new File(dataPath+username+".db");
+        userDB.createNewUser(username, password);
+        File file = new File(dataPath+username+".db");
         try {
-            userMusicDB.createNewFile();
+            file.createNewFile();
+            MusicDB mdb = new MusicDB(file.getPath());
+            mdb.init();
         } catch (IOException e) {
             System.out.println("Error: Unable to create user database.");
         }
@@ -58,7 +60,6 @@ public class Client {
                 pwd = scanner.next();
                 if(!client.login(username,pwd)) System.out.println("Wrong password");
             }while(!client.login(username,pwd));
-
 
         } else if (input == 2){
             do{

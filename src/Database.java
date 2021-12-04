@@ -33,7 +33,7 @@ public class Database {
         return 0;
     }
 
-    public void insert(String sql){
+    public void Query(String sql){
         connection = null;
         try {
             // create a database connection
@@ -53,6 +53,28 @@ public class Database {
             }
         }
     }
+
+    public void Query(String[] sql){
+        connection = null;
+        try {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:"+currentDB);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            for(String s : sql) statement.executeUpdate(s);
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
 
     public List<String> singleQuery(String sql){
         List<String> result = new ArrayList<>();
