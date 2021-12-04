@@ -7,8 +7,10 @@ public class Library {
     List<Artist> artists = new ArrayList<>();
     List<Album> albums = new ArrayList<>();
 
-    public Library(Database db){
-
+    public Library(MusicDB mDB){
+        songs = mDB.readSongs();
+        artists = mDB.readArtists();
+        albums = mDB.readAlbums();
     }
 
 

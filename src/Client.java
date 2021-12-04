@@ -36,8 +36,10 @@ public class Client {
         return password.equals(userDB.singleQuery("select password from users where username = '" + username + "'").get(0));
     }
 
-    public void loadUserDB(String username){
-
+    public Library loadUserDB(String username){
+        MusicDB mDB = new MusicDB(dataPath+username+".db");
+        Library userLib = new Library(mDB);
+        return userLib;
     }
 
     public static void main(String[] args) {
@@ -60,6 +62,9 @@ public class Client {
                 pwd = scanner.next();
                 if(!client.login(username,pwd)) System.out.println("Wrong password");
             }while(!client.login(username,pwd));
+
+            Library userLib = client.loadUserDB(username);
+            System.out.println(userLib.songs);
 
         } else if (input == 2){
             do{
