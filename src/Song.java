@@ -23,4 +23,24 @@ public class Song {
                 ", length=" + length +
                 '}';
     }
+
+    public String showSong(){
+        return "\"" + name + "\" " + "by " + artist + " in Album " + album;
+    }
+
+    public String toSQL(){
+        return "'"+name+"','"+artist.getName()+"','"+album.getName()+"',"+length;
+    }
+
+    public int getSongID(){
+        return SongID;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Artist getArtist(){
+        return artist;
+    }
 }
