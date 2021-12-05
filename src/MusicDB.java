@@ -6,14 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MusicDB extends Database{
+    int numSongs;
+    int numArtists;
+    int numAlbums;
+    int numPlaylists;
+
     public MusicDB(String dbName) {
         super(dbName);
+        numSongs = countRows("songs");
+        numArtists = countRows("artists");
+        numAlbums = countRows("albums");
+        numPlaylists = countRows("playlists");
     }
 
     public void init(){ //create tables in new musicDB
         Query("create table songs(songID INTEGER PRIMARY KEY NOT NULL, songName VARCHAR(50) NOT NULL , artist varchar(50) ,album varchar(50), length INTEGER)");
         Query("create table artists(artistID INTEGER PRIMARY KEY NOT NULL, artistName VARCHAR(50) NOT NULL)");
-        Query("create table albums(albumID INTEGER PRIMARY KEY NOT NULL, albumName VARCHAR(50) NOT NULL, artistID INTEGER NOT NULL, numSongs INTEGER)");
+        Query("create table albums(albumID INTEGER PRIMARY KEY NOT NULL, albumName VARCHAR(50) NOT NULL, artistID INTEGER NOT NULL)");
     }
 
     public List<Song> readSongs(){
@@ -88,7 +97,49 @@ public class MusicDB extends Database{
         return albums;
     }
 
-    //public void writeDB()
+    public int getNumSongs(){
+        return numSongs;
+    }
+
+    public int getArtistID(String artistName){
+        return IDQuery("select id from artists where artistName ='"+artistName+"';");
+    }
+
+    public void writeSongsToDB(List<Song> songs){
+        List<String> query = new ArrayList<>();
+        for(Song s : songs){
+            numSongs++;
+            query.add("insert into songs values("+numSongs+","+s.toSQL()+")");
+        }
+        Query(query);
+    }
+    public void writeArtistsToDB(List<Artist> artists){
+        List<String> query = new ArrayList<>();
+        for(Artist a: artists){
+            numArtists++;
+            query.add("insert into artists values("+numArtists+",'"+a.getName()+"')");
+        }
+        Query(query);
+    }
+    public void writeAlbumsToDB(List<Album> albums){
+        List<String> query = new ArrayList<>();
+        for(Album a:albums){
+            numAlbums++;
+            query.add("insert into albums values("+numAlbums+",'"+a.getName()+"',"+getArtistID(a.getName()));
+        }
+        Query(query);
+    }
+
+    public void writeNewPlaylist(Playlist playlist){
+        numPlaylists++;
+        List<String> query = new ArrayList<>();
+        Query("insert into playlists values("+numPlaylists+",'"+playlist.getName()+"')");
+        Query("CREATE TABLE "+playlist.getName()+"(songID INTEGER NOT NULL,songName VARCHAR(50) NOT NULL, artistName VARCHAR(50))");
+        for(Song s:playlist.getSongs()){
+            query.add("insert into "+playlist.getName()+" values("+s.getSongID()+",'"+s.getName()+"','"+s.getArtist().getName()+"')");
+        }
+        Query(query);
+    }
 
     public static void main(String[] args) {
         MusicDB test = new MusicDB("data/test.db");
