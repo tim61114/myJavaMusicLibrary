@@ -54,7 +54,7 @@ public class Database {
         }
     }
 
-    public void Query(String[] sql){
+    public void Query(List<String> sql){
         connection = null;
         try {
             // create a database connection
@@ -99,6 +99,31 @@ public class Database {
             }
         }
         return null;
+    }
+
+    public int IDQuery(String sql){
+        int res = 0;
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:"+currentDB);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                res = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return res;
     }
 
 
