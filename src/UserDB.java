@@ -13,5 +13,12 @@ public class UserDB extends Database{
         return true;
     }
 
+    public boolean checkUsernameExists(String username){
+        if(singleQuery("select username from users where username = '" + username + "'").size() == 0) {
+            return false;
+        }
+        else return true;
+    }
+
 
 }
