@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Library {
 
@@ -14,6 +15,13 @@ public class Library {
         songs = mDB.readSongs();
         artists = mDB.readArtists();
         albums = mDB.readAlbums();
+        List<String> playlistNames = mDB.readPlaylistNames();
+        List<List<Integer>> playlistData = mDB.readPlaylist();
+        for(int i = 0;i < playlistNames.size();i++){
+            Playlist temp = new Playlist(mDB.readPlaylistNames().get(i));
+            playlistData.get(i).forEach(index -> temp.addSong(songs.get(index)));
+            playlists.add(temp);
+        }
     }
 
     public void showSongs(){
@@ -38,6 +46,16 @@ public class Library {
         playlists.add(temp);
         database.writeNewPlaylist(temp);
         return temp;
+    }
+
+    public Song getRandomSong(){
+        Random random = new Random();
+        if(songs.isEmpty()) return null;
+        return songs.get(random.nextInt(songs.size()));
+    }
+
+    public List<Playlist> getPlaylists(){
+        return playlists;
     }
 
     public void importSongs(List<Song> newSongs, List<Artist> newArtists, List<Album> newAlbums ){
