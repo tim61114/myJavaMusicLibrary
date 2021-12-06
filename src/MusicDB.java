@@ -97,6 +97,59 @@ public class MusicDB extends Database{
         return albums;
     }
 
+    public List<List<Integer>> readPlaylist(){
+        List<List<Integer>> playlists = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:"+currentDB);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            ResultSet rs = statement.executeQuery("select playlistName from playlists");
+            while (rs.next()) {
+                List<Integer> eachPlaylist = new ArrayList<>();
+                ResultSet rs2  = statement.executeQuery("select songID from "+rs.getString("playlistName"));
+                while(rs2.next()){
+                    eachPlaylist.add(rs2.getInt("songID"));
+                }
+                playlists.add(eachPlaylist);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return playlists;
+    }
+
+    public List<String> readPlaylistNames(){
+        List<String> pName = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:"+currentDB);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            ResultSet rs = statement.executeQuery("select playlistName from playlists");
+            while (rs.next()) {
+                pName.add(rs.getString("playlistName"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return pName;
+    }
+
     public int getNumSongs(){
         return numSongs;
     }
@@ -146,6 +199,7 @@ public class MusicDB extends Database{
         System.out.println(test.readSongs());
         System.out.println(test.readArtists());
         System.out.println(test.readAlbums());
+        System.out.println(test.readPlaylistNames());
 
     }
 }
