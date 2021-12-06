@@ -5,6 +5,7 @@ import java.util.*;
 public class Client {
 
     public static final String dataPath = "data/";
+
     int currentNumberOfUsers;
     UserDB userDB = new UserDB(dataPath+"user.db");
     static String currentUser;
@@ -40,37 +41,59 @@ public class Client {
         String stringInput;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Hello, " + currentUser);
-        while(input != 5){
+        while(input != 6){
             System.out.println("\nMenu: ");
             System.out.println("1. Show my song list.");
             System.out.println("2. Play a random song from my library.");
             System.out.println("3. Import songs");
             System.out.println("4. Create new Playlist");
-            System.out.println("5. Log out");
+            System.out.println("5. View my playlists ");
+            System.out.println("6. Log out");
             input = scanner.nextInt();
 
-            if(input == 1){
-                lib.showSongs();
-            }else if (input == 4){
-                lib.showSongsWithIndex();
-                System.out.println("Please enter the index of the songs you want to add into the playlist in a line.");
-                scanner.nextLine();
-                stringInput = scanner.nextLine();
-                String[] splited = stringInput.split(" ");
-                List<Integer> indexes = new ArrayList<>();
-                for(String s: splited){
-                    indexes.add(Integer.parseInt(s));
-                }
-                Collections.sort(indexes);
-                if(indexes.get(indexes.size() - 1) > lib.songs.size()){
-                    System.out.println("Sorry, you do not have more than "+indexes.get(indexes.size() - 1) + " songs.");
-                }
-                else{
-                    System.out.println("Please name your playlist");
-                    stringInput = scanner.next();
-                    Playlist temp = lib.createNewPlaylist(stringInput,indexes);
-                    temp.show();
-                }
+            switch(input){
+                case 1:
+                    lib.showSongs();
+                    break;
+                case 2:
+                    Song randomSong = lib.getRandomSong();
+                    if(randomSong == null){
+                        System.out.println("You have no songs in your library! Consider adding some songs?");
+                    }
+                    else randomSong.play();
+                    break;
+                case 4:
+                    lib.showSongsWithIndex();
+                    System.out.println("Please enter the index of the songs you want to add into the playlist in a line.");
+                    scanner.nextLine();
+                    stringInput = scanner.nextLine();
+                    String[] splited = stringInput.split(" ");
+                    List<Integer> indexes = new ArrayList<>();
+                    for(String s: splited){
+                        indexes.add(Integer.parseInt(s));
+                    }
+                    Collections.sort(indexes);
+                    if(indexes.get(indexes.size() - 1) > lib.songs.size()){
+                        System.out.println("Sorry, you do not have more than "+indexes.get(indexes.size() - 1) + " songs.");
+                    }
+                    else{
+                        System.out.println("Please name your playlist");
+                        stringInput = scanner.next();
+                        Playlist temp = lib.createNewPlaylist(stringInput,indexes);
+                        temp.show();
+                    }
+                    break;
+                case 5:
+                    if(lib.getPlaylists().size() == 0){
+                        System.out.println("You have no playlists! Create one!");
+                    } else{
+                        for(Playlist p : lib.getPlaylists()){
+                            System.out.println(p.getName());
+                            p.show();
+                            System.out.println();
+                        }
+                    }
+                    break;
             }
         }
     }
