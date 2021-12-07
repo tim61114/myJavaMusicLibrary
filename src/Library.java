@@ -5,10 +5,13 @@ import java.util.Random;
 public class Library {
 
     MusicDB database;
-    List<Song> songs = new ArrayList<>();
-    List<Artist> artists = new ArrayList<>();
-    List<Album> albums = new ArrayList<>();
+    List<Song> songs;
+    List<Artist> artists;
+    List<Album> albums;
     List<Playlist> playlists = new ArrayList<>();
+    Song nowPlaying = null;
+    List<Song> nowPlayingList = new ArrayList<>();
+    int nowPlayingIndex = -1;
 
     public Library(MusicDB mDB){
         database = mDB;
@@ -48,10 +51,17 @@ public class Library {
         return temp;
     }
 
-    public Song getRandomSong(){
+    public List<Song> Shuffle(){
         Random random = new Random();
         if(songs.isEmpty()) return null;
-        return songs.get(random.nextInt(songs.size()));
+        List<Song> songcopy = new ArrayList<>(songs);
+        for(int i = songcopy.size() - 1;i >= 0;i--){
+            int randomIndex = random.nextInt(songcopy.size()) ;
+            nowPlayingList.add(songcopy.get(randomIndex));
+            songcopy.remove(randomIndex);
+        }
+        nowPlayingIndex = 0;
+        return nowPlayingList;
     }
 
     public List<Playlist> getPlaylists(){
