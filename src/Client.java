@@ -38,17 +38,30 @@ public class Client {
 
     public static void libMenu(Library lib){
         int input = 0;
+        boolean pause = false;
         String stringInput;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Hello, " + currentUser);
-        while(input != 6){
+        while(input != 9){
             System.out.println("\nMenu: ");
             System.out.println("1. Show my song list.");
             System.out.println("2. Play a random song from my library.");
             System.out.println("3. Import songs");
             System.out.println("4. Create new Playlist");
             System.out.println("5. View my playlists ");
-            System.out.println("6. Log out");
+            System.out.println("6. Play next song");
+            System.out.println("7. View now playing list");
+            System.out.println("8. Play/Pause");
+            System.out.println("9. Log out");
+            System.out.println();
+            if(lib.nowPlaying != null){
+                if(pause){
+                    System.out.println("Now playing "+ lib.nowPlaying.showSong() + " (Paused)");
+                } else {
+                    System.out.println("Now playing "+ lib.nowPlaying.showSong());
+                }
+            }
+
             input = scanner.nextInt();
 
             switch(input){
@@ -56,11 +69,8 @@ public class Client {
                     lib.showSongs();
                     break;
                 case 2:
-                    Song randomSong = lib.getRandomSong();
-                    if(randomSong == null){
-                        System.out.println("You have no songs in your library! Consider adding some songs?");
-                    }
-                    else randomSong.play();
+                    lib.Shuffle();
+                    lib.nowPlaying = lib.nowPlayingList.get(lib.nowPlayingIndex);
                     break;
                 case 4:
                     lib.showSongsWithIndex();
@@ -94,6 +104,36 @@ public class Client {
                         }
                     }
                     break;
+                case 6:
+                    if(lib.nowPlayingList.isEmpty() || lib.nowPlayingIndex == -1){
+                        System.out.println("Play a song!");
+                    } else if(lib.nowPlayingIndex + 1  == lib.nowPlayingList.size()){
+                        lib.nowPlayingIndex = -1;
+                        lib.nowPlaying = null;
+                        lib.nowPlayingList = new ArrayList<>();
+                        System.out.println("Play a new list!");
+
+                    } else {
+                        lib.nowPlayingIndex++;
+                        lib.nowPlaying = lib.nowPlayingList.get(lib.nowPlayingIndex);
+                    }
+                    break;
+                case 7:
+                    if(lib.nowPlayingList.isEmpty()){
+                        System.out.println("I'll talk if you play something first!");
+                    } else {
+                        System.out.println();
+                        System.out.println("Current playing list:");
+                        for(Song s:lib.nowPlayingList){
+                            System.out.println(s.showSong());
+                        }
+                    }
+                case 8:
+                    if(lib.nowPlaying == null){
+                        System.out.println("Play something first!");
+                    } else {
+                        pause = !pause;
+                    }
             }
         }
     }
