@@ -1,3 +1,4 @@
+import javax.xml.transform.Result;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -99,15 +100,20 @@ public class MusicDB extends Database{
 
     public List<List<Integer>> readPlaylist(){
         List<List<Integer>> playlists = new ArrayList<>();
+        List<String> pName = new ArrayList<>() ;
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+currentDB);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);
 
             ResultSet rs = statement.executeQuery("select playlistName from playlists");
+
             while (rs.next()) {
+                pName.add(rs.getString("playlistName"));
+            }
+            for(String s: pName){
                 List<Integer> eachPlaylist = new ArrayList<>();
-                ResultSet rs2  = statement.executeQuery("select songID from "+rs.getString("playlistName"));
+                ResultSet rs2 = statement.executeQuery("select songID from "+s);
                 while(rs2.next()){
                     eachPlaylist.add(rs2.getInt("songID"));
                 }
@@ -196,9 +202,10 @@ public class MusicDB extends Database{
 
     public static void main(String[] args) {
         MusicDB test = new MusicDB("data/test.db");
-        System.out.println(test.readSongs());
-        System.out.println(test.readArtists());
-        System.out.println(test.readAlbums());
+        //System.out.println(test.readSongs());
+        //System.out.println(test.readArtists());
+        //System.out.println(test.readAlbums());
+        System.out.println(test.readPlaylist());
         System.out.println(test.readPlaylistNames());
 
     }
