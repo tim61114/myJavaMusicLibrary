@@ -85,6 +85,12 @@ public class MusicDB extends Database{
             while (rs.next()) {
                 albums.add(new Album(rs.getInt(1),rs.getString(2)));
             }
+            ResultSet rs2 = statement.executeQuery("select artistName from artists ar, albums al where al.artistID = ar.artistID;");
+            int i = 0;
+            while(rs2.next()){
+                albums.get(i).setArtistName(rs2.getString("artistName"));
+                i++;
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -204,9 +210,9 @@ public class MusicDB extends Database{
         MusicDB test = new MusicDB("data/test.db");
         //System.out.println(test.readSongs());
         //System.out.println(test.readArtists());
-        //System.out.println(test.readAlbums());
-        System.out.println(test.readPlaylist());
-        System.out.println(test.readPlaylistNames());
+        System.out.println(test.readAlbums());
+        //System.out.println(test.readPlaylist());
+        //System.out.println(test.readPlaylistNames());
 
     }
 }
