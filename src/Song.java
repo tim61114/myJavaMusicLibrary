@@ -44,6 +44,8 @@ public class Song {
         return artist;
     }
 
+    public Album getAlbum() { return album; }
+
     public void play(){
         System.out.println("Now playing: "+showSong());
 

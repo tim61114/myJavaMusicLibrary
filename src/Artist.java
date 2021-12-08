@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Artist {
@@ -10,6 +11,7 @@ public class Artist {
     public Artist(int id, String name){
         ArtistID = id;
         this.name = name;
+        albums = new ArrayList<>();
     }
 
     public Artist(String name){
@@ -19,6 +21,9 @@ public class Artist {
     public String getName(){
         return name;
     }
+    public int getArtistID() { return ArtistID; }
+    public List<Album> getAlbums() { return albums;}
+    public void addToAlbums(Album a){ albums.add(a);}
 
     @Override
     public String toString() {
