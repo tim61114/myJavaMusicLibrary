@@ -25,21 +25,76 @@ public class Library {
             playlistData.get(i).forEach(index -> temp.addSong(songs.get(index)));
             playlists.add(temp);
         }
+        linkData();
     }
 
+    public void linkData(){
+        for(Album a: albums){
+            for(Artist ar : artists){
+                if (a.getArtistName().equals(ar.getName())) {
+                    a.setArtist(ar);
+                    ar.addToAlbums(a);
+                }
+            }
+        }
+    }
+
+    //Show functions
+
     public void showSongs(){
+        System.out.println();
         if(songs.isEmpty()) System.out.println("Your library is empty! Consider adding some songs?");
         else{
             songs.forEach(song -> System.out.println(song.showSong()));
+            System.out.println();
         }
     }
 
     public void showSongsWithIndex(){
+        System.out.println();
         if(songs.isEmpty()) System.out.println("Your library is empty! Consider adding some songs?");
         else{
             songs.forEach(song -> System.out.println((songs.indexOf(song) +1) +" "+song.showSong()));
+            System.out.println();
         }
     }
+
+    public void showAlbums(){
+        System.out.println();
+        if(albums.isEmpty()){
+            System.out.println("There's nothing here...");
+        } else {
+            albums.forEach(album -> System.out.println(album.getName()));
+            System.out.println();
+        }
+    }
+
+    public void showArtists(){
+        System.out.println();
+        if(artists.isEmpty()){
+            System.out.println("It's quiet in here...");
+        } else {
+            artists.forEach(artist -> System.out.println(artist.getName()));
+            System.out.println();
+        }
+    }
+
+    public void showPlaylists(){
+        System.out.println();
+        if(playlists.size() == 0){
+            System.out.println("You have no playlists! Create one!");
+        } else{
+            playlists.forEach(playlist -> {
+                System.out.println(playlist.getName());
+                playlist.show();
+                System.out.println();
+            });
+            System.out.println();
+        }
+    }
+
+
+    //Create new playlist
 
     public Playlist createNewPlaylist(String name,List<Integer> indexes){
         Playlist temp = new Playlist(name);
@@ -50,6 +105,8 @@ public class Library {
         database.writeNewPlaylist(temp);
         return temp;
     }
+
+    //Create a new random list
 
     public List<Song> Shuffle(){
         Random random = new Random();
@@ -62,6 +119,10 @@ public class Library {
         }
         nowPlayingIndex = 0;
         return nowPlayingList;
+    }
+
+    public void exportPlaylists(String currentUser){
+        playlists.forEach(playlist -> playlist.export(currentUser));
     }
 
     public List<Playlist> getPlaylists(){
