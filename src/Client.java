@@ -16,7 +16,9 @@ public class Client {
 
     public void createUser(String username, String password){
         userDB.createNewUser(username, password);
-        File file = new File(dataPath+username+".db");
+        File dir = new File(dataPath+username);
+        dir.mkdirs();
+        File file = new File(dataPath+username+"/"+username+".db");
         try {
             file.createNewFile();
             MusicDB mdb = new MusicDB(file.getPath());
@@ -31,9 +33,37 @@ public class Client {
     }
 
     public Library loadUserMusicDB(String username){
-        MusicDB mDB = new MusicDB(dataPath+username+".db");
-        Library userLib = new Library(mDB);
-        return userLib;
+        MusicDB mDB = new MusicDB(dataPath+username+"/"+username+".db");
+        return new Library(mDB);
+    }
+
+    public static void showLib(Library lib){
+        int input = 0;
+        Scanner scanner = new Scanner(System.in);
+        while(input != 5) {
+            System.out.println(currentUser + "'s Library: ");
+            System.out.println("1. Songs");
+            System.out.println("2. Albums");
+            System.out.println("3. Artists");
+            System.out.println("4. Playlists");
+            System.out.println("5. Back to Menu");
+
+            input = scanner.nextInt();
+            switch (input){
+                case 1:
+                    lib.showSongs();
+                    break;
+                case 2:
+                    lib.showAlbums();
+                    break;
+                case 3:
+                    lib.showArtists();
+                    break;
+                case 4:
+                    lib.showPlaylists();
+                    break;
+            }
+        }
     }
 
     public static void libMenu(Library lib){
@@ -44,11 +74,11 @@ public class Client {
         System.out.println("Hello, " + currentUser);
         while(input != 9){
             System.out.println("\nMenu: ");
-            System.out.println("1. Show my song list.");
-            System.out.println("2. Play a random song from my library.");
-            System.out.println("3. Import songs");
+            System.out.println("1. My library");
+            System.out.println("2. Shuffle");
+            System.out.println("3. Import songs (Coming soon)");
             System.out.println("4. Create new Playlist");
-            System.out.println("5. View my playlists ");
+            System.out.println("5. Export my playlists");
             System.out.println("6. Play next song");
             System.out.println("7. View now playing list");
             System.out.println("8. Play/Pause");
@@ -66,7 +96,7 @@ public class Client {
 
             switch(input){
                 case 1:
-                    lib.showSongs();
+                    showLib(lib);
                     break;
                 case 2:
                     lib.Shuffle();
@@ -94,15 +124,7 @@ public class Client {
                     }
                     break;
                 case 5:
-                    if(lib.getPlaylists().size() == 0){
-                        System.out.println("You have no playlists! Create one!");
-                    } else{
-                        for(Playlist p : lib.getPlaylists()){
-                            System.out.println(p.getName());
-                            p.show();
-                            System.out.println();
-                        }
-                    }
+                    lib.exportPlaylists(currentUser);
                     break;
                 case 6:
                     if(lib.nowPlayingList.isEmpty() || lib.nowPlayingIndex == -1){
@@ -128,12 +150,14 @@ public class Client {
                             System.out.println(s.showSong());
                         }
                     }
+                    break;
                 case 8:
                     if(lib.nowPlaying == null){
                         System.out.println("Play something first!");
                     } else {
                         pause = !pause;
                     }
+                    break;
             }
         }
     }
