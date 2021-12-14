@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
-    String name;
-    List<Song> songs;
+    protected String name;
+    protected List<Song> songs;
 
     public Playlist(String name){
         this.name = name;
@@ -33,7 +33,7 @@ public class Playlist {
         try {
             File dir = new File("data/"+currentUser);
             dir.mkdirs();
-            FileWriter wf = new FileWriter(new File("data/"+currentUser+"/"+name+".xml"));
+            FileWriter wf = new FileWriter("data/"+currentUser+"/"+name+".xml");
             wf.write("<?xml version=\"1.0\"?>\n");
             wf.write("<playlist>\n");
             wf.write("<songs>\n");
