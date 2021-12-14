@@ -114,7 +114,7 @@ public class Database {
             }
 
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage());
         } finally {
             try {
                 if (connection != null)
