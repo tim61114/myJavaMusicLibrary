@@ -1,8 +1,8 @@
 public class Album {
-    int AlbumID;
-    String name;
-    String artistName;
-    Artist artist;
+    protected int AlbumID;
+    protected String name;
+    protected String artistName;
+    protected Artist artist;
 
     public Album(String name){
         this.name = name;
