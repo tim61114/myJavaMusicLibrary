@@ -13,6 +13,13 @@ public class Song {
         this.length = length;
     }
 
+    public Song(String name, String artistName, String albumName, int length){
+        this.name = name;
+        artist = new Artist(artistName);
+        album = new Album(albumName);
+        this.length = length;
+    }
+
     @Override
     public String toString() {
         return "Song{" +
@@ -29,7 +36,7 @@ public class Song {
     }
 
     public String toSQL(){
-        return "'"+name+"','"+artist.getName()+"','"+album.getName()+"',"+length;
+        return ("'"+name.replaceAll("'","''")+"','"+artist.getName().replaceAll("'","''")+"','"+album.getName().replaceAll("'","''")+"',"+length);
     }
 
     public int getSongID(){
@@ -46,8 +53,12 @@ public class Song {
 
     public Album getAlbum() { return album; }
 
-    public void play(){
-        System.out.println("Now playing: "+showSong());
+    public void play(Boolean pause){
+        if(pause){
+            System.out.println("Now playing: "+showSong() + " (Paused)");
+        } else {
+            System.out.println("Now playing: "+showSong());
+        }
 
     }
 }
