@@ -58,7 +58,7 @@ public class Library {
         System.out.println();
         if(songs.isEmpty()) System.out.println("Your library is empty! Consider adding some songs?");
         else{
-            songs.forEach(song -> System.out.println((songs.indexOf(song) +1) +" "+song.showSong()));
+            songs.forEach(song -> System.out.println((songs.indexOf(song) +1) +". "+song.showSong()));
             System.out.println();
         }
     }
@@ -68,7 +68,7 @@ public class Library {
         if(albums.isEmpty()){
             System.out.println("There's nothing here...");
         } else {
-            albums.forEach(album -> System.out.println(album.getName()));
+            albums.forEach(album -> System.out.println((albums.indexOf(album)+1)+". "+album.getName()));
             System.out.println();
         }
     }
@@ -78,7 +78,7 @@ public class Library {
         if(artists.isEmpty()){
             System.out.println("It's quiet in here...");
         } else {
-            artists.forEach(artist -> System.out.println(artist.getName()));
+            artists.forEach(artist -> System.out.println((artists.indexOf(artist)+1)+". "+artist.getName()));
             System.out.println();
         }
     }
@@ -142,6 +142,14 @@ public class Library {
         nowPlayingIndex = 0;
         return nowPlayingList;
     }
+
+    public List<Song> playSong(int index){
+        nowPlayingIndex = 0;
+        nowPlayingList = songs.subList(index-1,songs.size());
+         return nowPlayingList;
+    }
+
+
 
     public void exportPlaylists(String currentUser){
         playlists.forEach(playlist -> playlist.export(currentUser));

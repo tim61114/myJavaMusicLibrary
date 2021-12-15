@@ -7,7 +7,7 @@ public class Client {
     public static final String dataPath = "data/";
 
     int currentNumberOfUsers;
-    UserDB userDB = new UserDB(dataPath+"user.db");
+    static UserDB userDB = new UserDB(dataPath+"user.db");
     static String currentUser;
 
     public Client(){
@@ -96,7 +96,16 @@ public class Client {
             input = scanner.nextInt();
             switch (input){
                 case 1:
-                    lib.showSongs();
+                    lib.showSongsWithIndex();
+                    System.out.println("1. Play");
+                    System.out.println("2. Back");
+                    input = scanner.nextInt();
+                    if(input == 1){
+                        System.out.println("Please input the Song index:");
+                        input = scanner.nextInt();
+                        lib.playSong(input);
+                        lib.nowPlaying = lib.nowPlayingList.get(lib.nowPlayingIndex);
+                    }
                     break;
                 case 2:
                     lib.showAlbums();
@@ -111,7 +120,7 @@ public class Client {
         }
     }
 
-    public static void libMenu(Library lib){
+    public static void mainMenu(Library lib){
         int input = 0;
         boolean pause = false;
         String stringInput;
@@ -259,52 +268,57 @@ public class Client {
         Client client = new Client();
         int input = 0;
         while(input != 3){
-            System.out.println("Welcome");
-            System.out.println("1. User Login.");
-            System.out.println("2. Create new account.");
-            System.out.println("3. Exit the program.");
-            Scanner scanner = new Scanner(System.in);
-            input = scanner.nextInt();
-            String username,pwd, pwdCheck;
-            if(input == 1){
-                do{
-                    System.out.println("Please enter username");
-                    username = scanner.next();
-                    if(!client.userDB.checkUsernameExists(username)) System.out.println("User does not exist.");
-                }while(!client.userDB.checkUsernameExists(username));
-                do{
-                    System.out.println("Please enter password");
-                    pwd = scanner.next();
-                    if(!client.login(username,pwd)) System.out.println("Wrong password");
-                }while(!client.login(username,pwd));
-                if(username.equals("admin")){
-                    client.adminMenu();
-                } else {
-                    currentUser = username;
-                    libMenu(client.loadUserMusicDB(username));
+            try{
+                System.out.println("Welcome");
+                System.out.println("1. User Login.");
+                System.out.println("2. Create new account.");
+                System.out.println("3. Exit the program.");
+                Scanner scanner = new Scanner(System.in);
+                input = scanner.nextInt();
+                String username,pwd, pwdCheck;
+                if(input == 1){
+                    do{
+                        System.out.println("Please enter username");
+                        username = scanner.next();
+                        if(!client.userDB.checkUsernameExists(username)) System.out.println("User does not exist.");
+                    }while(!client.userDB.checkUsernameExists(username));
+                    do{
+                        System.out.println("Please enter password");
+                        pwd = scanner.next();
+                        if(!client.login(username,pwd)) System.out.println("Wrong password");
+                    }while(!client.login(username,pwd));
+                    if(username.equals("admin")){
+                        client.adminMenu();
+                    } else {
+                        currentUser = username;
+                        mainMenu(client.loadUserMusicDB(username));
+                    }
+                } else if (input == 2){
+                    do{
+                        System.out.println("Please enter username");
+                        username = scanner.next();
+                        }while(client.userDB.checkUsernameExists(username));
+                    do {
+                        System.out.println("PLease enter your password");
+                        pwd = scanner.next();
+                        System.out.println("Enter password again");
+                        pwdCheck = scanner.next();
+                        if(!pwd.equals(pwdCheck)) System.out.println("password does not match, try again");
+                    }while(!pwd.equals(pwdCheck));
+                    client.createUser(username,pwd);
+                    System.out.println("Please login.\n");
                 }
-            } else if (input == 2){
-                do{
-                    System.out.println("Please enter username");
-                    username = scanner.next();
-
-                }while(client.userDB.checkUsernameExists(username));
-                do {
-                    System.out.println("PLease enter your password");
-                    pwd = scanner.next();
-                    System.out.println("Enter password again");
-                    pwdCheck = scanner.next();
-                    if(!pwd.equals(pwdCheck)) System.out.println("password does not match, try again");
-                }while(!pwd.equals(pwdCheck));
-                client.createUser(username,pwd);
-                System.out.println("Please login.\n");
+            }catch (NullPointerException e){
+                userDB = new UserDB("../"+dataPath+"user.db");
             }
         }
-
-
-
     }
     public static void main(String[] args) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         loginMenu();
     }
 }
