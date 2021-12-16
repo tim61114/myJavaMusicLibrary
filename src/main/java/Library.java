@@ -17,6 +17,10 @@ public class Library {
     String currentAlbumBio;
     String currentSongBio;
 
+    /**
+     * @param mDB is the music db of the user
+     *            the constructor reads the data from the database and read it into java.
+     */
     public Library(MusicDB mDB){
         database = mDB;
         songs = mDB.readSongs();
@@ -32,6 +36,9 @@ public class Library {
         linkData();
     }
 
+    /**
+     * This links the Album and the Artists of a Song
+     */
     public void linkData(){
         for(Album a: albums){
             for(Artist ar : artists){
@@ -45,6 +52,9 @@ public class Library {
 
     //Show functions
 
+    /**
+     * Show all songs
+     */
     public void showSongs(){
         System.out.println();
         if(songs.isEmpty()) System.out.println("Your library is empty! Consider adding some songs?");
@@ -54,6 +64,9 @@ public class Library {
         }
     }
 
+    /**
+     * Show all songs with index
+     */
     public void showSongsWithIndex(){
         System.out.println();
         if(songs.isEmpty()) System.out.println("Your library is empty! Consider adding some songs?");
@@ -63,6 +76,9 @@ public class Library {
         }
     }
 
+    /**
+     * Show all albums
+     */
     public void showAlbums(){
         System.out.println();
         if(albums.isEmpty()){
@@ -73,6 +89,9 @@ public class Library {
         }
     }
 
+    /**
+     * Show all artists
+     */
     public void showArtists(){
         System.out.println();
         if(artists.isEmpty()){
@@ -83,6 +102,9 @@ public class Library {
         }
     }
 
+    /**
+     * Show all playlists
+     */
     public void showPlaylists(){
         System.out.println();
         if(playlists.size() == 0){
@@ -97,18 +119,29 @@ public class Library {
         }
     }
 
+    /**
+     * Fetches the Bio of the current playing song for the Song, Artist and Album.
+     * throws NullPointerException if nothing is found
+     */
     public void showBio(){
         if(nowPlaying != null){
             Parser p = new Parser();
             currentSongBio = p.getSongDescription(nowPlaying.getArtist().getName(),nowPlaying.getName());
             currentArtistBio = p.getArtistDescription(nowPlaying.getArtist().getName());
             currentAlbumBio = p.getAlbumDescription(nowPlaying.getArtist().getName(),nowPlaying.getAlbum().getName());
-            System.out.println("About the song:");
-            System.out.println(currentSongBio);
-            System.out.println("\nAbout the artist:");
-            System.out.println(currentArtistBio);
-            System.out.println("\nAbout the album:");
-            System.out.println(currentAlbumBio);
+            if(currentSongBio != null){
+                System.out.println("About the song:");
+                System.out.println(currentSongBio);
+            }
+            if(currentArtistBio != null){
+                System.out.println("\nAbout the artist:");
+                System.out.println(currentArtistBio);
+
+            }
+            if(currentAlbumBio != null){
+                System.out.println("\nAbout the album:");
+                System.out.println(currentAlbumBio);
+            }
         } else {
             System.out.println("Uh oh so quiet");
         }
@@ -118,6 +151,11 @@ public class Library {
 
     //Create new playlist
 
+    /**
+     * @param name is the name of the playlist
+     * @param indexes are the index of the songs
+     * @return a playlist
+     */
     public Playlist createNewPlaylist(String name,List<Integer> indexes){
         Playlist temp = new Playlist(name);
         for(Integer i : indexes){
@@ -130,6 +168,9 @@ public class Library {
 
     //Create a new random list
 
+    /**
+     * @return a shuffled list of all songs
+     */
     public List<Song> Shuffle(){
         Random random = new Random();
         if(songs.isEmpty()) return null;
@@ -143,6 +184,10 @@ public class Library {
         return nowPlayingList;
     }
 
+    /**
+     * @param index is the starting index
+     * @return the list of songs
+     */
     public List<Song> playSong(int index){
         nowPlayingIndex = 0;
         nowPlayingList = songs.subList(index-1,songs.size());
@@ -150,7 +195,10 @@ public class Library {
     }
 
 
-
+    /**
+     * @param currentUser is the username of the current user.
+     *                    This exports the playlist into an XML file stored in the users directory
+     */
     public void exportPlaylists(String currentUser){
         playlists.forEach(playlist -> playlist.export(currentUser));
     }
@@ -159,6 +207,12 @@ public class Library {
         return playlists;
     }
 
+    /**
+     * @param newSongs is the list of songs (from an album) fetched from musicbrainz
+     * @param newArtist is the artist name of the album
+     * @param newAlbum is the name of the album
+     *                 This writes the fetched album data into the db, and updates the current artist, album and song id from reading the db
+     */
     public void addNewAlbumToDB(List<Song> newSongs, String newArtist, String newAlbum){
         database.writeSongsToDB(newSongs);
         if(!checkArtistExists(newArtist)) {
@@ -173,6 +227,10 @@ public class Library {
         linkData();
     }
 
+    /**
+     * @param artistName is the name of the artist
+     * @return true if the artist is already in the 'artists' table, otherwise false
+     */
     public boolean checkArtistExists(String artistName){
         for(Artist a: artists){
             if(a.getName().equalsIgnoreCase(artistName)) return true;
@@ -180,6 +238,10 @@ public class Library {
         return false;
     }
 
+    /**
+     * @param albumName is the name of the album
+     * @return true if the album is already in the 'albums' table, otherwise false
+     */
     public boolean checkAlbumExists(String albumName){
         for(Album a: albums){
             if(a.getName().equalsIgnoreCase(albumName)) return true;

@@ -3,7 +3,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,13 @@ import java.util.List;
 public class Parser {
 
     DataFetcher df = new DataFetcher();
+
+    /**
+     * @param artistName is the name of the artist, preventing from getting results of a song with the same name.
+     * @param songName is the name of the song.
+     * @return the description after parsing the json value from the DataFetcher
+     * @see DataFetcher for uses on DataFetcher methods.
+     */
     public String getSongDescription(String artistName,String songName){
         String description = "";
         try {
@@ -27,6 +33,11 @@ public class Parser {
         return description.replaceAll("\n"," ");
     }
 
+    /**
+     * @param artistName is the name of the artist.
+     * @return the description after parsing the json value from the DataFetcher
+     * @see DataFetcher for uses on DataFetcher methods.
+     */
     public String getArtistDescription(String artistName){
         String description = "";
         try {
@@ -43,6 +54,12 @@ public class Parser {
         return description.replaceAll("\n"," ");
     }
 
+    /**
+     * @param artistName is the name of the artist, preventing from getting results of an album with the same name.
+     * @param albumName is the name of the album.
+     * @return the description after parsing the json value from the DataFetcher
+     * @see DataFetcher for uses on DataFetcher methods.
+     */
     public String getAlbumDescription(String artistName, String albumName){
         String description = "";
         try {
@@ -60,6 +77,10 @@ public class Parser {
         return description.replaceAll("\n"," ");
     }
 
+    /**
+     * @param a is an array composed of musicbrainz id, album name and artist name, obtained from
+     * @return a list of songs with each song having only without songID.
+     */
     public List<Song> getFullAlbum(String[] a){
         List<Song> album= new ArrayList<>();
         String JSONData = df.fetchJSONAlbumFromID(a[0]);

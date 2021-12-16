@@ -17,6 +17,11 @@ public class DataFetcher {
 
     /* for AudioDB*/
 
+    /**
+     * @param artistName is the name of the artist
+     * @param songName is the name of the song
+     * @return the json data of the specific query
+     */
     public String fetchJSONStringFromArtistAndSong(String artistName, String songName){
         String requestURL = "https://www.theaudiodb.com/api/v1/json/"+theAudioDBapiKey+"/searchtrack.php?";
         URL u;
@@ -35,6 +40,10 @@ public class DataFetcher {
         return null;
     }
 
+    /**
+     * @param artistName is the name of the artist
+     * @return the json data of the artist
+     */
     public String fetchJSONStringFromArtist(String artistName){
         String requestURL = "https://www.theaudiodb.com/api/v1/json/"+theAudioDBapiKey+"/search.php?";
         URL u;
@@ -53,6 +62,11 @@ public class DataFetcher {
         return null;
     }
 
+    /**
+     * @param artistName is the name of the artist
+     * @param albumName is the name of the album
+     * @return the json data of the album performed by the artist
+     */
     public String fetchJSONStringFromArtistAndAlbum(String artistName, String albumName){
         String requestURL = "https://www.theaudiodb.com/api/v1/json/"+theAudioDBapiKey+"/searchalbum.php?";
         URL u;
@@ -71,6 +85,12 @@ public class DataFetcher {
         return null;
     }
 
+    /**
+     * @param artistName is the name of the artist
+     * @param albumName is the name of the album
+     * @return an array of strings containing the id, name of the artist and name of the album.
+     * This is done by using the "indexed search with advanced syntax" provided by musicbrainz
+     */
     /* for Musicbrainz */
     public String[] fetchAlbumID(String artistName, String albumName){
         String queryResult;
@@ -107,6 +127,10 @@ public class DataFetcher {
         return null;
     }
 
+    /**
+     * @param requestURL is the URL of the query
+     * @return the whole data read from the url
+     */
     protected String getFromURL(String requestURL) {
         String result = null;
         URL u = null;
@@ -124,6 +148,10 @@ public class DataFetcher {
         return result;
     }
 
+    /**
+     * @param id is the id of the musicbrainz data
+     * @return the album data in json
+     */
     public String fetchJSONAlbumFromID(String id){
         String queryResult = null;
         String requestURL = "https://musicbrainz.org/ws/2/release/"+id+"?inc=artist-credits%2Brecordings&fmt=json";

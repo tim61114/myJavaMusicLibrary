@@ -5,10 +5,18 @@ import java.util.List;
 public class Database {
     String currentDB;
     Connection connection;
+
+    /**
+     * @param dbName is the name of the db, could be either user db or music db
+     */
     public Database(String dbName){
         currentDB = dbName;
     }
 
+    /**
+     * @param table is the name of the table in the currentDB
+     * @return the rows of the table
+     */
     public int countRows(String table){
         int count;
         try {
@@ -33,6 +41,9 @@ public class Database {
         return 0;
     }
 
+    /**
+     * @param sql is the SQL query, this method is used to perform actions without a return value such as deletion and data store
+     */
     public void Query(String sql){
         connection = null;
         try {
@@ -54,6 +65,9 @@ public class Database {
         }
     }
 
+    /**
+     * @param sql is a list of SQL query, speeding up the process if there are lines of Query to perform.
+     */
     public void Query(List<String> sql){
         connection = null;
         try {
@@ -76,6 +90,10 @@ public class Database {
     }
 
 
+    /**
+     * @param sql is the SQL query
+     * @return the list of results
+     */
     public List<String> singleQuery(String sql){
         List<String> result = new ArrayList<>();
         try {
@@ -101,6 +119,10 @@ public class Database {
         return null;
     }
 
+    /**
+     * @param sql is the SQL query
+     * @return the id of the query result
+     */
     public int IDQuery(String sql){
         int res = 0;
         try {

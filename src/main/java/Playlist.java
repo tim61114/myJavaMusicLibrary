@@ -29,6 +29,9 @@ public class Playlist {
         return songs;
     }
 
+    /**
+     * @param currentUser is used for finding the correct data path for exporting the XML file.
+     */
     public void export(String currentUser){
         try {
             File dir = new File("data/"+currentUser);

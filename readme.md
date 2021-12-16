@@ -1,37 +1,74 @@
-Homework #7. Putting it all together.
+Music Library ver. 1.0
 
-Due: December 16, 11:59pm.
+This is a Music Library with user system, where each user has their own database and data directory.
+We can create new users or use the example user provided. (Which is user "test" with password "test".)
+There is also an admin user that can delete users. (Which is user "admin" with password "admin".)
 
-This homework will be graded using specifications grading. There are a sequence of tasks to complete. Grades will be assigned as follows:
+The Login Menu looks like 
 
-To receive a C, you should complete tasks 1-3
-To receive a B, complete all the C-level tasks, plus task 4.
-To receive an A, complete the B-level tasks, plus tasks 5 and 6.
-In this assignment, you'll integrate some of the pieces and components from our earlier work to develop a complete program for managing our music. Please note that, for this assignment, we'll be focusing on the management portion of the task. Two pieces that we won't integrate are:
+Welcome
+1. User Login.
+2. Create new account.
+3. Exit the program.
 
-A tool for playing music files. The java.io.* package provides support for this, but it can be a little tricky to deal with all the different formats and codecs.
-A GUI for managing music. We haven't dealt much with developing graphical user interfaces in this class; the old-school way to do this would be as a standalone application using Swing, but most modern approaches instead do this inside a web browser using Javascript.
-These are both great extensions, and well within your skillset, and could make for a really fun project over break to extend your expertise.
+Users can choose to log in, create a new account or exit the program by inputting the index.
 
-What we will do here is integrate some of the work from previous labs and homeworks to build a tool that can manage a music collection and load information from third-party repositories. You probably have quite a bit of this code developed already, so this homework will be more about polishing and integrating than new development. I've described what to accomplish in terms of specifications: that is, what your code should do. You can make your own design decisions about how to implement this. I encourage you to be creative, add features that you think are interesting, and have fun.
+After logging in, the main menu will be shown as below
 
-The goal is to develop a program with a text-based UI that can do the following:
+Menu:
+1. My library
+2. Shuffle
+3. Import songs (from album)
+4. Create new Playlist
+5. Export my playlists
+6. Play next song
+7. View now playing list
+8. Play/Pause
+9. What am I listening?
+10. Logout
 
-Display the user's songs, artists, and albums.
-Prompt the user for a new song, artist, or album and then fill in any missing data.
-Generate XML files that contain a playlist based on a particular criterion, such as genre, mood, or artist.
-Specific tasks to implement include:
+The Library is where users can see their songs, artists and albums (if it's not an empty library)
+Shuffle is to play all songs in random order.
+Import songs is to fetch data from musicbrainz given the name of the artist and the album. 
+Create new playlists is to create a new customized playlist where the user can choose what to be in the playlist.
+Export my playlists is to export the users' all playlists to xml files.
+Play next song is to switch to next song in the song list.
+View now playing list shows the current list you are playing. (Like playing the shuffle list or playing songs starting from the middle.)
+What am I listening is to fetch the song, album artist description from theAudioDB (if is provided). Normally it does NOT work on classical music, please try it on pop songs.
+Logout is to log out of the current user, brings the user back to the Login menu.
 
-You should implement a UI that can take basic text-based commands. I will let you decide on the format for this.
-Your songs, artists, and albums should all be stored in a SQLite database, with separate tables for each datatype.
-You should be able to generate XML files containing a playlist. (you probably have this from the past lab.)
-Your program should allow a user to partially specify a song, artist, or album, and then use a third-party tool to fill in missing details. You may use either:
-TheAudioDB. They have a REST-based API that returns JSON. You can find more information here: https://www.theaudiodb.com/api_guide.php (Links to an external site.)
-MusicBrainz. They also have a REST-based API; it can return either XML or JSON. You can find more info on this here: https://musicbrainz.org/doc/MusicBrainz_API (Links to an external site.)
-You might also want to use these services to fill in other data, such as description, genre, running time, etc.
 
-You should also include the following: 5. Please use Javadoc to generate documentation for all of the classes in your homework. This should include a short readme explaining how to run your code. 6. Please use maven to create and organize your project. When you're completed, you should be able to use maven to:
 
-automatically run unit tests
-regenerate documentation
-compile a JAR.
+This Music Library is mostly encapsulated, which the classes can be roughly separated into 5 categories.
+
+1. Song-data related - Song, Artist, Album, Playlist
+2. Database related - Database, MusicDB, UserDB
+3. The Library
+4. The Client
+5. The RestAPI related - DataFetcher, Parser
+
+The song-data related classes: 
+    Mostly getters and setters, or simple methods to turn stored data into desired form.
+
+The Database related classes: 
+    MusicDB and UserDB extends the Database class, where the Database class implements the lowest level of SQL, where MusicDB and UserDB 
+    has upper level methods and lower level SQL methods.
+
+The Library: 
+    The Library handles the connection between database and java, and is the main core. The library calls the methods from musicDB classes
+    and also has classes to check the stored data. After a user login, a library of the user is created, where the data of the user is 
+    read into the user's library.
+
+The Client:
+    The Client is where the menu are stored, and also has methods to create new users, and also load the user's database and by reading the
+    db, creating a new library of the user.
+
+The RestAPI related classes:
+    The DataFetcher is the lower level class which fetches the Strings of json data from either musicbrainz or theAudioDB and passes to 
+    Parser, and is then parsed into data such as artist name, song name etc.
+
+
+This Library is a clean project, so it did not contain the classes used in previous HWs, because I was trying to see how far can I go 
+designing the whole structure on my own. Turns out the structure is acceptable, and there are plenty of implementations and functions 
+that can be extended afterwards. Sadly I did not have the time or the strength to finish the GUI, so that's probably the thing I'll do 
+this winter. It was a great fun designing the structure and also thinking about the possibilities this project can create.

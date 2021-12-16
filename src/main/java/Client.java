@@ -14,6 +14,12 @@ public class Client {
         currentNumberOfUsers = userDB.getNumUsers();
     }
 
+    /**
+     * @param username is the username of the user
+     * @param password is the password of the user
+     * this method will then call the constructor of Music db with fresh parameter
+     * @see MusicDB
+     */
     public void createUser(String username, String password){
         userDB.createNewUser(username, password);
         File dir = new File(dataPath+username);
@@ -28,15 +34,27 @@ public class Client {
         }
     }
 
+    /**
+     * @param username is the username of the user
+     * @param password is the password of the user
+     * @return true if the username matches the password in the user db, otherwise false
+     */
     public boolean login(String username, String password){
         return password.equals(userDB.matchPassword(username));
     }
 
+    /**
+     * @param username is the username of the user, also the name of the user's db
+     * @return a library of the current user
+     */
     public Library loadUserMusicDB(String username){
         MusicDB mDB = new MusicDB(dataPath+username+"/"+username+".db");
         return new Library(mDB);
     }
 
+    /**
+     * The menu of the admin (limited to username 'admin' only)
+     */
     public void adminMenu(){
         int input = 0;
         String inputString;
@@ -82,6 +100,10 @@ public class Client {
         }
     }
 
+    /**
+     * @param lib is the library of the user
+     *            shows the menu of the library
+     */
     public static void showLib(Library lib){
         int input = 0;
         Scanner scanner = new Scanner(System.in);
@@ -120,6 +142,9 @@ public class Client {
         }
     }
 
+    /**
+     * @param lib is the library of the current user.
+     */
     public static void mainMenu(Library lib){
         int input = 0;
         boolean pause = false;
@@ -260,15 +285,19 @@ public class Client {
                 System.out.println("As you wish.");
             }catch(InputMismatchException e){
                 System.out.println("Input numbers not letters!");
+            }catch (NullPointerException e){
+                System.out.println("Sorry, I did not find the thing you were looking for.");
             }
         }
     }
 
+    /**
+     * This is the login menu
+     */
     public static void loginMenu(){
         Client client = new Client();
         int input = 0;
         while(input != 3){
-            try{
                 System.out.println("Welcome");
                 System.out.println("1. User Login.");
                 System.out.println("2. Create new account.");
@@ -308,9 +337,6 @@ public class Client {
                     client.createUser(username,pwd);
                     System.out.println("Please login.\n");
                 }
-            }catch (NullPointerException e){
-                userDB = new UserDB("../"+dataPath+"user.db");
-            }
         }
     }
     public static void main(String[] args) {

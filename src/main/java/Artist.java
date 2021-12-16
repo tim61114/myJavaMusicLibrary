@@ -14,6 +14,9 @@ public class Artist {
         albums = new ArrayList<>();
     }
 
+    /**
+     * this constructor is used when importing data from musicbrainz and is then given an ID afterwards.
+     */
     public Artist(String name){
         this.name = name;
     }

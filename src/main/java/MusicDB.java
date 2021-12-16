@@ -12,6 +12,9 @@ public class MusicDB extends Database{
     protected int numAlbums;
     protected int numPlaylists;
 
+    /**
+     * @param dbName is the name of the user, which is also the name of the db file
+     */
     public MusicDB(String dbName) {
         super(dbName);
         numSongs = countRows("songs");
@@ -20,10 +23,17 @@ public class MusicDB extends Database{
         numPlaylists = countRows("playlists");
     }
 
+    /**
+     * @param dbName is the name of the user
+     * @param fresh is to create a new music db instead of reading the rows of the tables in the db.
+     */
     public MusicDB(String dbName,Boolean fresh){
         super(dbName);
     }
 
+    /**
+     * to generate all tables in a fresh db for a new user
+     */
     public void init(){ //create tables in new musicDB
         Query("create table songs(songID INTEGER PRIMARY KEY NOT NULL, songName VARCHAR(50) NOT NULL , artist varchar(50) ,album varchar(50), length INTEGER)");
         Query("create table artists(artistID INTEGER PRIMARY KEY NOT NULL, artistName VARCHAR(50) NOT NULL)");
@@ -31,6 +41,9 @@ public class MusicDB extends Database{
         Query("CREATE TABLE playlists(playlistID INTEGER PRIMARY KEY NOT NULL, playlistName VARCHAR(50));");
     }
 
+    /**
+     * @return a list of songs by reading the 'songs' table in the user's db
+     */
     public List<Song> readSongs(){
         List<Song> songs = new ArrayList<>();
         try {
@@ -55,6 +68,9 @@ public class MusicDB extends Database{
         return songs;
     }
 
+    /**
+     * @return a list of artists by reading the 'artists' table in the user's db
+     */
     public List<Artist> readArtists(){
         List<Artist> artists = new ArrayList<>();
         try {
@@ -79,6 +95,10 @@ public class MusicDB extends Database{
         return artists;
     }
 
+
+    /**
+     * @return a list of albums by reading the 'albums' table in the user's db
+     */
     public List<Album> readAlbums(){
         List<Album> albums = new ArrayList<>();
         try {
@@ -109,6 +129,9 @@ public class MusicDB extends Database{
         return albums;
     }
 
+    /**
+     * @return a list of lists which the inner list are the actual data of the playlists of the user and the outer list is the list to save all playlists as integers, representing the id of a song.
+     */
     public List<List<Integer>> readPlaylist(){
         List<List<Integer>> playlists = new ArrayList<>();
         List<String> pName = new ArrayList<>() ;
@@ -143,6 +166,10 @@ public class MusicDB extends Database{
         return playlists;
     }
 
+
+    /**
+     * @return the names of the playlists
+     */
     public List<String> readPlaylistNames(){
         List<String> pName = new ArrayList<>();
         try {
@@ -171,10 +198,17 @@ public class MusicDB extends Database{
         return numSongs;
     }
 
+    /**
+     * @param artistName is the name of the artist
+     * @return the id of the artist
+     */
     public int getArtistID(String artistName){
         return IDQuery("select artistID from artists where artistName ='"+artistName+"';");
     }
 
+    /**
+     * @param songs is the list of songs to be stored into the db.
+     */
     public void writeSongsToDB(List<Song> songs){
         List<String> query = new ArrayList<>();
         for(Song s : songs){
@@ -185,11 +219,17 @@ public class MusicDB extends Database{
     }
 
 
+    /**
+     * @param artist is the name of the artist to be stored into the db.
+     */
     public void writeArtistToDB(String artist){
         Query("insert into artists values("+numArtists+",'"+artist.replaceAll("'","''")+"')");
         numArtists++;
     }
 
+    /**
+     * @param artists is the list of artists to be stored into the db. Currently unused.
+     */
     public void writeArtistsToDB(List<Artist> artists){
         List<String> query = new ArrayList<>();
         for(Artist a: artists){
@@ -199,20 +239,30 @@ public class MusicDB extends Database{
         Query(query);
     }
 
+    /**
+     * @param album is the name of the album to be written in to the db
+     * @param artist is the name of the artist
+     */
     public void writeAlbumToDB(String album,String artist){
         Query("insert into albums values("+numAlbums+",'"+album.replaceAll("'","''")+"',"+getArtistID(artist)+")");
         numAlbums++;
     }
 
+    /**
+     * @param albums is the list of albums to be stored into the db. Currently unused.
+     */
     public void writeAlbumsToDB(List<Album> albums){
         List<String> query = new ArrayList<>();
         for(Album a:albums){
-            numAlbums++;
             query.add("insert into albums values("+numAlbums+",'"+a.getName().replaceAll("'","''")+"',"+getArtistID(a.getName()));
+            numAlbums++;
         }
         Query(query);
     }
 
+    /**
+     * @param playlist is to write a playlist into the db, which is separated into writing the name into the playlist table and creating a new table for storing the songs of the playlist
+     */
     public void writeNewPlaylist(Playlist playlist){
         numPlaylists++;
         List<String> query = new ArrayList<>();
