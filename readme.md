@@ -28,14 +28,23 @@ Menu:
 10. Logout
 
 The Library is where users can see their songs, artists and albums (if it's not an empty library)
+
 Shuffle is to play all songs in random order.
+
 Import songs is to fetch data from musicbrainz given the name of the artist and the album. 
+
 Create new playlists is to create a new customized playlist where the user can choose what to be in the playlist.
+
 Export my playlists is to export the users' all playlists to xml files.
+
 Play next song is to switch to next song in the song list.
+
 View now playing list shows the current list you are playing. (Like playing the shuffle list or playing songs starting from the middle.)
+
 What am I listening is to fetch the song, album artist description from theAudioDB (if is provided). Normally it does NOT work on classical music, please try it on pop songs.
+
 Logout is to log out of the current user, brings the user back to the Login menu.
+
 
 
 
