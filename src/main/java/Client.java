@@ -48,7 +48,7 @@ public class Client {
      * @return a library of the current user
      */
     public Library loadUserMusicDB(String username){
-        MusicDB mDB = new MusicDB(dataPath+username+"/"+username+".db");
+        MusicDB mDB = new MusicDB(dataPath+username+"/"+username+".db", false);
         return new Library(mDB);
     }
 
@@ -116,28 +116,22 @@ public class Client {
             System.out.println("5. Back to Menu");
 
             input = scanner.nextInt();
-            switch (input){
-                case 1:
+            switch (input) {
+                case 1 -> {
                     lib.showSongsWithIndex();
                     System.out.println("1. Play");
                     System.out.println("2. Back");
                     input = scanner.nextInt();
-                    if(input == 1){
+                    if (input == 1) {
                         System.out.println("Please input the Song index:");
                         input = scanner.nextInt();
                         lib.playSong(input);
                         lib.nowPlaying = lib.nowPlayingList.get(lib.nowPlayingIndex);
                     }
-                    break;
-                case 2:
-                    lib.showAlbums();
-                    break;
-                case 3:
-                    lib.showArtists();
-                    break;
-                case 4:
-                    lib.showPlaylists();
-                    break;
+                }
+                case 2 -> lib.showAlbums();
+                case 3 -> lib.showArtists();
+                case 4 -> lib.showPlaylists();
             }
         }
     }

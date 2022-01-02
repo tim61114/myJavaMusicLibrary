@@ -14,22 +14,19 @@ public class MusicDB extends Database{
 
     /**
      * @param dbName is the name of the user, which is also the name of the db file
-     */
-    public MusicDB(String dbName) {
-        super(dbName);
-        numSongs = countRows("songs");
-        numArtists = countRows("artists");
-        numAlbums = countRows("albums");
-        numPlaylists = countRows("playlists");
-    }
-
-    /**
-     * @param dbName is the name of the user
      * @param fresh is to create a new music db instead of reading the rows of the tables in the db.
      */
-    public MusicDB(String dbName,Boolean fresh){
+    public MusicDB(String dbName, Boolean fresh) {
         super(dbName);
+        if(!fresh){
+            numSongs = countRows("songs");
+            numArtists = countRows("artists");
+            numAlbums = countRows("albums");
+            numPlaylists = countRows("playlists");
+        }
+
     }
+
 
     /**
      * to generate all tables in a fresh db for a new user
